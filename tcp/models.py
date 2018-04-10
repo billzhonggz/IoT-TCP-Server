@@ -1,10 +1,10 @@
 from django.db import models
-import datetime
 
 from tornado.ioloop import IOLoop
 from tornado.tcpserver import TCPServer
 from tornado.iostream import StreamClosedError
 from tornado import gen
+
 
 # Create your models here.
 
@@ -39,15 +39,16 @@ class ServerOperation(models.Model):
     status = models.BooleanField()
 
     def run_tcp_server(self):
-        server = IotTcpServer()
-        server.listen(9876)
+        iot_tcp_server = IotTcpServer()
+        iot_tcp_server.listen(9876)
         IOLoop.current().start()
         self.status = True
         return 'Running'
 
     def stop_tcp_server(self):
         # TODO: Evaluate availability of this statement.
-        IOLoop.current().stop()
+        ioloop = IOLoop.current()
+        ioloop.add_callback(ioloop.stop())
         self.status = False
         return 'Stopped'
 
