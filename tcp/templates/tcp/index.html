@@ -14,29 +14,29 @@
 </form>
 
 <p>Server status records: </p>
-<table>
-    <th>
+<table border="1">
+    <tr>
         <td>Date time</td>
         <td>Status</td>
-    </th>
+    </tr>
     {% for record in server_records %}
         <tr>
-            <td>{{ record.date_time }}</td>
+            <td>{{ record.status_change_date_time }}</td>
             <td>{{ record.status }}</td>
         </tr>
     {% endfor %}
 </table>
 
 <p>TCP access log: </p>
-<table>
-    <th>
+<table border="1">
+    <tr>
         <td>Data time</td>
         <td>Content</td>
-    </th>
+    </tr>
     {% for record in server_log %}
     <tr>
-        <td>{{ record.date_time }}</td>
-        <td>{{ record.content }}</td>
+        <td>{{ record.receive_date_time }}</td>
+        <td>{{ record.raw_data }}</td>
     </tr>
     {% endfor %}
 </table>
