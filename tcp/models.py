@@ -25,17 +25,18 @@ class IotTcpServer(TCPServer):
 
 
 class RawData(models.Model):
-    receive_date = models.DateField(auto_now_add=True, blank=True)
-    receive_time = models.TimeField(auto_now_add=True, blank=True)
+    receive_date_time = models.DateTimeField('Record received')
     raw_data = models.CharField(max_length=100)
 
     def set_raw_data(self, data):
         self.raw_data = data
 
+    def __str__(self):
+        return self.id
+
 
 class ServerOperation(models.Model):
-    date = models.DateField(auto_now_add=True, blank=True)
-    time = models.TimeField(auto_now_add=True, blank=True)
+    status_change_date_time = models.DateTimeField('Status changed')
     status = models.BooleanField()
 
     def run_tcp_server(self):
@@ -46,16 +47,15 @@ class ServerOperation(models.Model):
         return 'Running'
 
     def stop_tcp_server(self):
-        # TODO: Evaluate availability of this statement.
-        ioloop = IOLoop.current()
-        ioloop.add_callback(ioloop.stop())
+        IOLoop.current().stop()
         self.status = False
         return 'Stopped'
 
+    def __str__(self):
+        return self.id
 
-# TEMP: Test code for TCP server.
+
+# TEMP: Unit test.
 if __name__ == '__main__':
-    server = IotTcpServer()
-    server.listen(9876)
-    print('TCP server is running.')
-    IOLoop.current().start()
+    status = ServerOperation.run_tcp_server(ServerOperation)
+    print(status)

@@ -18,5 +18,6 @@ from django.urls import path
 from tcp import views
 
 urlpatterns = [
-    path('', views.DisplayTcpReceive, name='tcp'),
+    path('', views.index, name='tcp'),
+    path('operation/', views.operation, name='operation'),
 ]

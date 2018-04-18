@@ -1,0 +1,42 @@
+<h1>IoT TCP Server</h1>
+
+<h3>Current server status: {{ server_status }}</h3>
+
+<p>Turn on/off TCP server</p>
+{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+<form action="{% url 'operation' %}" method="post">
+    {% csrf_token %}
+    <input type="radio" name="choice" id="on" value="on"/>
+    <label for="on">On</label>
+    <input type="radio" name="choice" id="off" value="off"/>
+    <label for="off">Off</label>
+    <input type="submit" value="Change">
+</form>
+
+<p>Server status records: </p>
+<table>
+    <th>
+        <td>Date time</td>
+        <td>Status</td>
+    </th>
+    {% for record in server_records %}
+        <tr>
+            <td>{{ record.date_time }}</td>
+            <td>{{ record.status }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<p>TCP access log: </p>
+<table>
+    <th>
+        <td>Data time</td>
+        <td>Content</td>
+    </th>
+    {% for record in server_log %}
+    <tr>
+        <td>{{ record.date_time }}</td>
+        <td>{{ record.content }}</td>
+    </tr>
+    {% endfor %}
+</table>
