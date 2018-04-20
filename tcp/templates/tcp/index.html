@@ -2,7 +2,7 @@
 
 <h3>Current server status: {{ server_status }}</h3>
 
-<p>Turn on/off TCP server</p>
+<p>Turn on/off TCP server (Not available now)</p>
 {% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
 <form action="{% url 'operation' %}" method="post">
     {% csrf_token %}
@@ -10,7 +10,7 @@
     <label for="on">On</label>
     <input type="radio" name="choice" id="off" value="off"/>
     <label for="off">Off</label>
-    <input type="submit" value="Change">
+{#    <input type="submit" value="Change">#}
 </form>
 
 <p>Server status records: </p>
