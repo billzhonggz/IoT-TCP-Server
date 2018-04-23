@@ -1,4 +1,5 @@
 import SetupDjangoORM
+from ConvertCoordination import transform
 from tcp.models import *
 
 from tornado.ioloop import IOLoop
@@ -17,11 +18,32 @@ class IotTcpServer(TCPServer):
                 # print(data)
                 data_string = data.decode("utf-8")
                 print(data_string)
+                splited = split_data(data_string)
+                print(splited)
+                # Handle coordinates
+                coordinates = handle_coordinates(splited[1], splited[2], splited[3], splited[4])
+                print(coordinates)
                 # Write data to ORM.
-                rd = RawData(raw_data=data_string)
-                rd.save()
+                # rd = RawData(raw_data=data_string)
+                # rd.save()
             except StreamClosedError:
                 break
+
+
+def split_data(raw_data):
+    if raw_data[:2] == '@@':
+        data = raw_data[2:-2]
+        return data.split(',')
+
+
+def handle_coordinates(lat_degrees, lat_minutes, long_degrees, long_minutes):
+    # Convert to degrees only.
+    lat = int(lat_degrees) + float(lat_minutes) / 60
+    long = int(long_degrees) + float(long_minutes) / 60
+    # Convert to Mars coordinate.
+    trans = transform(lat, long)
+    print(trans)
+    return trans
 
 
 def run_tcp_server():
