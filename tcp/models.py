@@ -1,28 +1,7 @@
 from django.db import models
 
-from tornado.ioloop import IOLoop
-from tornado.tcpserver import TCPServer
-from tornado.iostream import StreamClosedError
-from tornado import gen
-
 
 # Create your models here.
-
-
-class IotTcpServer(TCPServer):
-    @gen.coroutine
-    def handle_stream(self, stream, address):
-        while True:
-            try:
-                data = yield stream.read_until(b"\n")
-                yield stream.write(data)
-                data_string = data.decode("utf-8")
-                print(data_string)
-                # Write data to ORM.
-                rd = RawData(raw_data=data_string)
-                rd.save()
-            except StreamClosedError:
-                break
 
 
 class RawData(models.Model):
@@ -41,27 +20,34 @@ class ServerOperation(models.Model):
         return self.id
 
 
-def run_tcp_server():
-    try:
-        iot_tcp_server = IotTcpServer()
-        iot_tcp_server.listen(9876)
-        IOLoop.current().start()
-        so1 = ServerOperation(status=True)
-        so1.save()
-    except:
-        return 'TCPServer start up failed.'
+class Device(models.Model):
+    imei = models.IntegerField
+
+    def __str__(self):
+        return self.id
 
 
-def stop_tcp_server():
-    try:
-        IOLoop.current().stop()
-        so2 = ServerOperation(status=False)
-        so2.save()
-    except:
-        return 'TCPServer stop failed.'
+class Location(models.Model):
+    time = models.DateTimeField
+    initial_locate_duration = models.IntegerField
+    lat = models.FloatField
+    long = models.FloatField
+    height = models.FloatField
+
+    def __str__(self):
+        return self.id
 
 
-# TEMP: Unit test.
-if __name__ == '__main__':
-    status = run_tcp_server()
-    print(status)
+class Alarm(models.Model):
+    time = models.DateTimeField
+    power_voltage = models.FloatField
+    backup_voltage = models.FloatField
+    lock_status = models.IntegerField
+    alarm_status = models.IntegerField
+    vibrate_alarm_status = models.IntegerField
+    lock_mode = models.IntegerField
+    alarm_mode = models.IntegerField
+    brushless_control_mode = models.IntegerField
+
+    def __str__(self):
+        return self.id

@@ -1,4 +1,6 @@
 import SetupDjangoORM
+from datetime import datetime
+from pytz import UTC
 from ConvertCoordination import transform
 from tcp.models import *
 
@@ -23,6 +25,9 @@ class IotTcpServer(TCPServer):
                 # Handle coordinates
                 coordinates = handle_coordinates(splited[1], splited[2], splited[3], splited[4])
                 print(coordinates)
+                # Handle time
+                dt = handle_datetime(splited[6])
+                print(dt)
                 # Write data to ORM.
                 # rd = RawData(raw_data=data_string)
                 # rd.save()
@@ -34,6 +39,14 @@ def split_data(raw_data):
     if raw_data[:2] == '@@':
         data = raw_data[2:-2]
         return data.split(',')
+
+
+def handle_datetime(datetime_string):
+    # Throw away decimal numbers.
+    datetime_string = datetime_string[:-4]
+    dt1 = datetime.strptime(datetime_string, '%Y%m%d%H%M%S')
+    dt1 = dt1.replace(tzinfo=UTC)
+    return dt1
 
 
 def handle_coordinates(lat_degrees, lat_minutes, long_degrees, long_minutes):
