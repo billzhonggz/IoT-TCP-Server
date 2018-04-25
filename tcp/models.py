@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 # Create your models here.
@@ -28,6 +29,12 @@ class Device(models.Model):
 
 
 class Location(models.Model):
+    device = models.ForeignKey(Device, on_delete=models.ProtectedError)
+    alarm = models.OneToOneField(
+        'Alarm',
+        on_delete=models.CASCADE,
+        related_name='Alarm',
+    )
     time = models.DateTimeField
     initial_locate_duration = models.IntegerField
     lat = models.FloatField
@@ -39,6 +46,12 @@ class Location(models.Model):
 
 
 class Alarm(models.Model):
+    device = models.ForeignKey(Device, on_delete=models.ProtectedError)
+    location = models.OneToOneField(
+        Location,
+        on_delete=models.CASCADE,
+        related_name='Alarm',
+    )
     time = models.DateTimeField
     power_voltage = models.FloatField
     backup_voltage = models.FloatField

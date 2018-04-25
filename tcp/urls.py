@@ -19,5 +19,4 @@ from tcp import views
 
 urlpatterns = [
     path('', views.index, name='tcp'),
-    path('operation/', views.operation, name='operation'),
 ]
