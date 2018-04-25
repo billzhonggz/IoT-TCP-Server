@@ -22,7 +22,7 @@ class ServerOperation(models.Model):
 
 
 class Device(models.Model):
-    imei = models.IntegerField
+    imei = models.IntegerField()
 
     def __str__(self):
         return self.id
@@ -35,11 +35,11 @@ class Location(models.Model):
         on_delete=models.CASCADE,
         related_name='Alarm',
     )
-    time = models.DateTimeField
-    initial_locate_duration = models.IntegerField
-    lat = models.FloatField
-    long = models.FloatField
-    height = models.FloatField
+    time = models.DateTimeField()
+    initial_locate_duration = models.IntegerField()
+    lat = models.FloatField()
+    long = models.FloatField()
+    height = models.FloatField()
 
     def __str__(self):
         return self.id
@@ -52,15 +52,15 @@ class Alarm(models.Model):
         on_delete=models.CASCADE,
         related_name='Alarm',
     )
-    time = models.DateTimeField
-    power_voltage = models.FloatField
-    backup_voltage = models.FloatField
-    lock_status = models.IntegerField
-    alarm_status = models.IntegerField
-    vibrate_alarm_status = models.IntegerField
-    lock_mode = models.IntegerField
-    alarm_mode = models.IntegerField
-    brushless_control_mode = models.IntegerField
+    time = models.DateTimeField()
+    power_voltage = models.FloatField()
+    backup_voltage = models.FloatField()
+    lock_status = models.IntegerField()
+    alarm_status = models.IntegerField()
+    vibrate_alarm_status = models.IntegerField()
+    lock_mode = models.IntegerField()
+    alarm_mode = models.IntegerField()
+    brushless_control_mode = models.IntegerField()
 
     def __str__(self):
         return self.id

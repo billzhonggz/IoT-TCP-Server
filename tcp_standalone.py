@@ -20,19 +20,46 @@ class IotTcpServer(TCPServer):
                 # print(data)
                 data_string = data.decode("utf-8")
                 print(data_string)
-                splited = split_data(data_string)
-                print(splited)
-                # Handle coordinates
-                coordinates = handle_coordinates(splited[1], splited[2], splited[3], splited[4])
-                print(coordinates)
-                # Handle time
-                dt = handle_datetime(splited[6])
-                print(dt)
-                # Write data to ORM.
-                # rd = RawData(raw_data=data_string)
-                # rd.save()
+                # Logging
+                rd = RawData(raw_data=data_string)
+                rd.save()
+                # Save valid data.
+                handle_data(data_string)
             except StreamClosedError:
                 break
+
+
+def handle_data(raw_data):
+    # First: Split the string.
+    splited = split_data(raw_data)
+    # Second: Handle coordinates.
+    coordinates = handle_coordinates(splited[1], splited[2], splited[3], splited[4])
+    # Third: Handle datetime.
+    dt = handle_datetime(splited[6])
+    # Fourth: Creating objects.
+    dev = Device.objects.create(imei=splited[0])
+    dev.save()
+    location = Location(
+        device=dev,
+        time=dt,
+        lat=coordinates[0],
+        long=coordinates[1],
+        height=splited[5],
+    )
+    location.save()
+    alarm = Alarm(
+        device=dev,
+        time=dt,
+        power_voltage=splited[7],
+        backup_voltage=splited[8],
+        lock_status=splited[9],
+        alarm_status=splited[10],
+        vibrate_alarm_status=splited[11],
+        lock_mode=splited[12],
+        alarm_mode=splited[13],
+        brushless_control_mode=splited[14],
+    )
+    alarm.save()
 
 
 def split_data(raw_data):
