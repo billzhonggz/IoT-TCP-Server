@@ -37,8 +37,12 @@ def handle_data(raw_data):
     # Third: Handle datetime.
     dt = handle_datetime(splited[6])
     # Fourth: Creating objects.
-    dev = Device.objects.create(imei=splited[0])
-    dev.save()
+    # Check whether device record exists.
+    try:
+        dev = Device.objects.get(imei=splited[0])
+    except dev.__len__() == 0:
+        dev = Device(imei=splited[0])
+        dev.save()
     location = Location(
         device=dev,
         time=dt,

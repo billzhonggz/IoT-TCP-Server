@@ -1,5 +1,5 @@
 from django.db import models
-from django.conf import settings
+from datetime import datetime
 
 
 # Create your models here.
@@ -22,7 +22,7 @@ class ServerOperation(models.Model):
 
 
 class Device(models.Model):
-    imei = models.IntegerField()
+    imei = models.BigIntegerField(default=0, unique=True)
 
     def __str__(self):
         return self.id
@@ -30,16 +30,16 @@ class Device(models.Model):
 
 class Location(models.Model):
     device = models.ForeignKey(Device, on_delete=models.ProtectedError)
-    alarm = models.OneToOneField(
-        'Alarm',
-        on_delete=models.CASCADE,
-        related_name='Alarm',
-    )
-    time = models.DateTimeField()
-    initial_locate_duration = models.IntegerField()
-    lat = models.FloatField()
-    long = models.FloatField()
-    height = models.FloatField()
+    # alarm = models.OneToOneField(
+    #     'Alarm',
+    #     on_delete=models.CASCADE,
+    #     related_name='Alarm',
+    # )
+    time = models.DateTimeField(default=datetime.now())
+    initial_locate_duration = models.IntegerField(default=0)
+    lat = models.FloatField(default=0.0)
+    long = models.FloatField(default=0.0)
+    height = models.FloatField(default=0.0)
 
     def __str__(self):
         return self.id
@@ -47,20 +47,20 @@ class Location(models.Model):
 
 class Alarm(models.Model):
     device = models.ForeignKey(Device, on_delete=models.ProtectedError)
-    location = models.OneToOneField(
-        Location,
-        on_delete=models.CASCADE,
-        related_name='Alarm',
-    )
-    time = models.DateTimeField()
-    power_voltage = models.FloatField()
-    backup_voltage = models.FloatField()
-    lock_status = models.IntegerField()
-    alarm_status = models.IntegerField()
-    vibrate_alarm_status = models.IntegerField()
-    lock_mode = models.IntegerField()
-    alarm_mode = models.IntegerField()
-    brushless_control_mode = models.IntegerField()
+    # location = models.OneToOneField(
+    #     Location,
+    #     on_delete=models.CASCADE,
+    #     related_name='Alarm',
+    # )
+    time = models.DateTimeField(default=datetime.now())
+    power_voltage = models.FloatField(default=0.0)
+    backup_voltage = models.FloatField(default=0.0)
+    lock_status = models.IntegerField(default=0)
+    alarm_status = models.IntegerField(default=0)
+    vibrate_alarm_status = models.IntegerField(default=0)
+    lock_mode = models.IntegerField(default=0)
+    alarm_mode = models.IntegerField(default=0)
+    brushless_control_mode = models.IntegerField(default=0)
 
     def __str__(self):
         return self.id
