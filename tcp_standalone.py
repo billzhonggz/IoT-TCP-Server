@@ -30,6 +30,15 @@ class IotTcpServer(TCPServer):
 
 
 def handle_data(raw_data):
+    '''
+    :param raw_data: Input string receive from the device.
+    Following the following format.
+    @@356802031957755,023,07.3897,113,17.9050,18.9,20180401143519.000,136,0152500,4140800,1,1,1,1,1,1##$
+    @@IMEI(模块ID),纬度(度),纬度(分),经度(度),经度(分),高度,UTC时间,首次定位时间(s),动力电池电压(数据*2=V伏特，2待定),
+      备份锂电池电压(数据/1000000=V伏特),锁是否打开(1未开,2开),报警器是否报警(1未报警,2报警),震动报警(还没想好反正1个字符),
+      锁模式(1常开,2常闭),报警器模式(1常开,2常闭),无刷控制器锁模式(1常开,2常闭)##$
+    :return:
+    '''
     # First: Split the string.
     splited = split_data(raw_data)
     # Second: Handle coordinates.
@@ -49,26 +58,27 @@ def handle_data(raw_data):
         lat=coordinates[0],
         long=coordinates[1],
         height=splited[5],
+        initial_locate_duration=splited[7]
     )
     location.save()
     alarm = Alarm(
         device=dev,
         time=dt,
-        power_voltage=splited[7],
-        backup_voltage=splited[8],
-        lock_status=splited[9],
-        alarm_status=splited[10],
-        vibrate_alarm_status=splited[11],
-        lock_mode=splited[12],
-        alarm_mode=splited[13],
-        brushless_control_mode=splited[14],
+        power_voltage=float(splited[8]) * 2,
+        backup_voltage=float(splited[9]) / 1000000,
+        lock_status=splited[10],
+        alarm_status=splited[11],
+        vibrate_alarm_status=splited[12],
+        lock_mode=splited[13],
+        alarm_mode=splited[14],
+        brushless_control_mode=splited[15],
     )
     alarm.save()
 
 
 def split_data(raw_data):
     if raw_data[:2] == '@@':
-        data = raw_data[2:-2]
+        data = raw_data[2:-3]
         return data.split(',')
 
 
