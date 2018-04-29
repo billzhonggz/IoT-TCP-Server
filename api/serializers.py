@@ -8,7 +8,7 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class StatusSerializer(serializers.ModelSerializer):
+class AlarmStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alarm
         fields = '__all__'
