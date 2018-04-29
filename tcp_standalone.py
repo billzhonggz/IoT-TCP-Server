@@ -12,7 +12,7 @@ class IotTcpServer(TCPServer):
     def handle_stream(self, stream, address):
         while True:
             try:
-                data = yield stream.read_until(b"\n")
+                data = yield stream.read_until(b"$")
                 yield stream.write(data)
                 data_string = data.decode("utf-8")
                 print(data_string)
