@@ -49,7 +49,8 @@ def handle_data(raw_data):
     # Check whether device record exists.
     try:
         dev = Device.objects.get(imei=splited[0])
-    except dev.__len__() == 0:
+    except Device.DoesNotExist:
+        print('Create new Device object.')
         dev = Device(imei=splited[0])
         dev.save()
     location = Location(
