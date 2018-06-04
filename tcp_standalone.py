@@ -65,7 +65,7 @@ def handle_data(raw_data):
     alarm = Alarm(
         device=dev,
         time=dt,
-        power_voltage=float(splited[8]) * 2,
+        power_voltage=(float(splited[8]) * 104.3) / (4.3 * 1000000),
         backup_voltage=float(splited[9]) / 1000000,
         lock_status=splited[10],
         alarm_status=splited[11],
